@@ -29,8 +29,9 @@ class InfoTrackTest:
         df2 = input_df.groupby(['FirstName','MiddleName','LastName','DateOfBirth','PlaceOfBirth'], as_index=False).last()
 
 
-        df2['uuid'] = df2.apply(lambda _: uuid.uuid4().to_string(), axis=1)
-        
+        # df2['uuid'] = df2.apply(lambda _: uuid.uuid4(), axis=1)
+
+        df2['uuid'] = df2.index.to_series().map(lambda x: uuid.uuid4())        
 
         log.info("Sending this frame to RedShift:",df2)
 
