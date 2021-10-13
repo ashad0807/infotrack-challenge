@@ -28,10 +28,15 @@ class InfoTrackTest:
         
         df2 = input_df.groupby(['FirstName','MiddleName','LastName','DateOfBirth','PlaceOfBirth'], as_index=False).last()
 
-        df2['uuid'] = df2.apply(lambda _: uuid.uuid4(), axis=1)
+
+        df2['uuid'] = df2.apply(lambda _: uuid.uuid4().to_string(), axis=1)
+        
+
+        log.info("Sending this frame to RedShift:",df2)
 
 
-        df2.to_sql('infotrack.asic_companies_data', cnn, index=False, if_exists='replace')
+
+        df2.to_sql('test_data', cnn, index=False, if_exists='replace')
         
 
     def reads3(self):
