@@ -2,6 +2,7 @@ import sqlalchemy as SA
 import psycopg2
 import boto3
 import io
+import uuid
 from io import StringIO
 import logging as log
 import pandas as pd
@@ -25,9 +26,10 @@ class InfoTrackTest:
         engine = SA.create_engine(url)
         cnn = engine.connect()
         
-        df2 = input_df.groupby(['FirstName','MiddleName','LastName','DateOfBirth','PlaceOfBirth']).agg({ 'Address':'last',
-                             'Position':'last', 
-                             'ACN':'last' }).reset_index()
+        df2 = input_df.groupby(['FirstName','MiddleName','LastName','DateOfBirth','PlaceOfBirth'], as_index=False).last()
+
+        df2['uuid'] = df2.apply(lambda _: uuid.uuid4(), axis=1)
+
 
         df2.to_sql('infotrack.asic_companies_data', cnn, index=False, if_exists='replace')
         
